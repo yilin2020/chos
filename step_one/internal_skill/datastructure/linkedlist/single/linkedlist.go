@@ -27,7 +27,7 @@ func (l *Linkedlist) Empty() bool {
 }
 
 func (l *Linkedlist) ValueAt(index int) int {
-	if index < 0 || index >= l.size {
+	if index < 0 || index > l.size {
 		return -1
 	}
 	cur := l.root
@@ -75,6 +75,63 @@ func (l *Linkedlist) PopBack() int {
 	l.size--
 	return perv.data
 }
+func (l *Linkedlist) Erase(index int) {
+	if index < 0 || index > l.size {
+		panic("index out of range")
+	}
+
+	cur := l.root
+	for i := 0; i < index-1; i++ {
+		cur = cur.next
+	}
+	cur.next = cur.next.next
+	cur = nil
+	l.size--
+}
+
+func (l *Linkedlist) ValueNFromEnd(n int) int {
+	slow := l.root
+	fast := l.root
+	for fast != nil && n > 0 {
+		fast = fast.next
+		n--
+	}
+
+	for fast != nil {
+		fast = fast.next
+		slow = slow.next
+	}
+	return slow.data
+}
+
+func (l *Linkedlist) Reverse() {
+	cur := l.root
+	cur.next = reverse(cur.next)
+	l.root = cur
+}
+
+func reverse(n *Node) *Node {
+	if n.next == nil || n == nil {
+		return n
+	}
+	newNode := reverse(n.next)
+	n.next.next = n
+	n.next = nil
+	return newNode
+}
+func (l *Linkedlist) RemoveValue(value int) {
+	prev := l.root
+	for prev.next != nil {
+		if prev.next.data == value {
+			cur := prev.next
+			prev.next = prev.next.next
+			cur.next = nil
+		} else {
+			prev = prev.next
+		}
+	}
+}
+
 func (l *Linkedlist) String() string {
 	cur := l.root.next
 
